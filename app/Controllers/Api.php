@@ -29,7 +29,10 @@ class Api extends ResourceController
         if($sensorModels->insert($sensorData)){
             $settingsData = $controlSettings->findAll();
             $responseData = [
-                'settings' => $settingsData,
+                'is_manual' => intval($settingsData[0]['settings_value']),
+                'valve_1' => intval($settingsData[1]['settings_value']),
+                'valve_2' => intval($settingsData[2]['settings_value']),
+                'is_pump' => intval($settingsData[3]['settings_value']),
             ];
             return $this->responseBuilder(200, 'Berhasil update log', $responseData);
         }else{
