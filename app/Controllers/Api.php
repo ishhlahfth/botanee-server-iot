@@ -48,8 +48,14 @@ class Api extends ResourceController
     public function getAllSettings() {
         $controlSettings = new ControlSettings();
         $settingsData = $controlSettings->findAll();
+        $responseData = [
+            'is_manual' => intval($settingsData[0]['settings_value']),
+            'valve_1' => intval($settingsData[1]['settings_value']),
+            'valve_2' => intval($settingsData[2]['settings_value']),
+            'is_pump' => intval($settingsData[3]['settings_value']),
+        ];
         if($settingsData){
-            return $this->responseBuilder(200, 'Success', $settingsData);
+            return $this->responseBuilder(200, 'Success', $responseData);
         }else{
             return $this->responseBuilder(404, 'Fail', null);
         }
