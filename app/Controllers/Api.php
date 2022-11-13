@@ -46,7 +46,13 @@ class Api extends ResourceController
 
     }
     public function getAllSettings() {
-
+        $controlSettings = new ControlSettings();
+        $settingsData = $controlSettings->findAll();
+        if($settingsData){
+            return $this->responseBuilder(200, 'Success', $settingsData);
+        }else{
+            return $this->responseBuilder(404, 'Fail', null);
+        }
     }
 
     function responseBuilder($code = null, $message = null, $data = null) {
@@ -56,22 +62,5 @@ class Api extends ResourceController
             'data' => $data,
         ];
         return $this->respond($response);
-    }
-
-    public function freeAssessment()
-    {
-        $testMessage = $this->request->getVar('message');
-        $response = [
-            'status'   => 200,
-            'error'    => null,
-            'messages' => [
-                'success' => $testMessage
-            ]
-        ];
-        return $this->respond($response);
-    }
-    public function sendContactMessage()
-    {
-        echo 'testContactMessage';
     }
 }

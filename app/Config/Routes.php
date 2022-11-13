@@ -43,7 +43,7 @@ $routes->post('/d/log', 'Api::postSensorLog');
 //Controller API
 $routes->get('/c/latest_log', 'Api::getLatestLogs');
 $routes->get('/c/log', 'Api::getAllLogs');
-$routes->get('/c/settings', 'Api::getSettings');
+$routes->get('/c/settings', 'Api::getAllSettings');
 $routes->post('/c/update_settings', 'Api::updateSettings');
 
 /*
