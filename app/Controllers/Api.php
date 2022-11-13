@@ -43,7 +43,20 @@ class Api extends ResourceController
 
     }
     public function updateSettings() {
-
+        $controlSettings = new ControlSettings();
+        $reqHeader = $this->request->headers();
+        $rawRequest = $this->request->getRawInput();
+        $settingsId = $rawRequest['id'];
+        $controllerData = [
+            'settings_value' => $rawRequest['value'],
+            'last_updated' => date('Y-m-d H:i:s'),
+        ];
+        if($controlSettings->update($settingsId, $controllerData)){
+            $settingsData = $controlSettings->find($settingsId);
+            return $this->responseBuilder(200, 'Berhasil update status', $settingsData);
+        }else{
+            return $this->responseBuilder(400, 'Gagal update status', null);
+        }
     }
     public function getLatestLog() {
 
