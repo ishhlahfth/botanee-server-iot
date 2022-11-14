@@ -52,14 +52,32 @@ class Api extends ResourceController
             'last_updated' => date('Y-m-d H:i:s'),
         ];
         if($controlSettings->update($settingsId, $controllerData)){
-            $settingsData = $controlSettings->find($settingsId);
-            return $this->responseBuilder(200, 'Berhasil update status', $settingsData);
+            $settingsData = $controlSettings->fidAll();
+            $responseData = [
+                'is_manual' => intval($settingsData[0]['settings_value']),
+                'valve_1' => intval($settingsData[1]['settings_value']),
+                'valve_2' => intval($settingsData[2]['settings_value']),
+                'is_pump' => intval($settingsData[3]['settings_value']),
+            ];
+            return $this->responseBuilder(200, 'Berhasil update status', $responseData);
         }else{
             return $this->responseBuilder(400, 'Gagal update status', null);
         }
     }
-    public function getLatestLog() {
-
+    public function getLatestLogs() {
+        $sensorModels = new SensorModels();
+        $sensorData = $sensorModels->orderBy('id', 'DESC')->first();
+        $s1 = ($sensorData['s1_status'] > 0) ? 'WET' : 'DRY';
+        $s2 = ($sensorData['s1_status'] > 0) ? 'WET' : 'DRY';
+        $responseData = [
+            'sensor_1' => $s1,
+            'sensor_2' => $s2,
+        ];
+        if($sensorData){
+            return $this->responseBuilder(200, 'Success', $responseData);
+        }else{
+            return $this->responseBuilder(404, 'Fail', null);
+        }
     }
     public function getAllSettings() {
         $controlSettings = new ControlSettings();
