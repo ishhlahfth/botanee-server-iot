@@ -52,7 +52,7 @@ class Api extends ResourceController
             'last_updated' => date('Y-m-d H:i:s'),
         ];
         if($controlSettings->update($settingsId, $controllerData)){
-            $settingsData = $controlSettings->fidAll();
+            $settingsData = $controlSettings->findAll();
             $responseData = [
                 'is_manual' => intval($settingsData[0]['settings_value']),
                 'valve_1' => intval($settingsData[1]['settings_value']),
