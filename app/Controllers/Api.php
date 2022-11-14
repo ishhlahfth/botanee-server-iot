@@ -68,7 +68,7 @@ class Api extends ResourceController
         $sensorModels = new SensorModels();
         $sensorData = $sensorModels->orderBy('id', 'DESC')->first();
         $s1 = ($sensorData['s1_status'] > 0) ? 'WET' : 'DRY';
-        $s2 = ($sensorData['s1_status'] > 0) ? 'WET' : 'DRY';
+        $s2 = ($sensorData['s2_status'] > 0) ? 'WET' : 'DRY';
         $responseData = [
             'sensor_1' => $s1,
             'sensor_2' => $s2,
