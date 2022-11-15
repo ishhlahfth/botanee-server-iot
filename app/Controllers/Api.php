@@ -21,12 +21,18 @@ class Api extends ResourceController
         $controlSettings = new ControlSettings();
         $reqHeader = $this->request->headers();
         $rawRequest = $this->request->getRawInput();
-        $sensorData = [
-            's1_status' => $rawRequest['sensor_1'],
-            's2_status' => $rawRequest['sensor_2'],
-            'timestamp' => date('Y-m-d H:i:s'),
+        $sensor1data = [
+            'settings_value' => $rawRequest['sensor_1'],
+            'last_updated' => date('Y-m-d H:i:s'),
         ];
-        if($sensorModels->insert($sensorData)){
+        $s1upd = $controlSettings->update(6, $sensor1data);
+        $sensor2data = [
+            'settings_value' => $rawRequest['sensor_2'],
+            'last_updated' => date('Y-m-d H:i:s'),
+        ];
+        $s2upd = $controlSettings->update(7, $sensor2data);
+        
+        if($s1upd && $s2upd){
             $settingsData = $controlSettings->findAll();
             $responseData = [
                 'is_manual' => intval($settingsData[0]['settings_value']),
@@ -65,15 +71,17 @@ class Api extends ResourceController
         }
     }
     public function getLatestLogs() {
-        $sensorModels = new SensorModels();
-        $sensorData = $sensorModels->orderBy('id', 'DESC')->first();
-        $s1 = ($sensorData['s1_status'] > 0) ? 'WET' : 'DRY';
-        $s2 = ($sensorData['s2_status'] > 0) ? 'WET' : 'DRY';
+        $controlSettings = new ControlSettings();
+        $sensor1Data = $controlSettings->find(6);
+        $sensor2Data = $controlSettings->find(7);
+
+        $s1 = ($sensor1Data['settings_value'] > 0) ? 'WET' : 'DRY';
+        $s2 = ($sensor2Data['settings_value'] > 0) ? 'WET' : 'DRY';
         $responseData = [
             'sensor_1' => $s1,
             'sensor_2' => $s2,
         ];
-        if($sensorData){
+        if($responseData){
             return $this->responseBuilder(200, 'Success', $responseData);
         }else{
             return $this->responseBuilder(404, 'Fail', null);
